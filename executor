@@ -1,3 +1,4 @@
+--Made by System
 local EncodeTable = {
 	[" "] = 0,
 
@@ -34,6 +35,17 @@ local function Encode(text)
 	end
 	return result
 end
+
+local FireLuau = Instance.new("Part")
+FireLuau.Parent = workspace
+FireLuau.Name = "FireLuau"
+FireLuau.Anchored = true
+FireLuau.CanCollide = false
+FireLuau.Size = Vector3.new(1,1,1)
+FireLuau.Position = Vector3.new(0,0, 0)
+
+local Fire = Instance.new("Fire")
+Fire.Parent = FireLuau
 
 local function Decode(numbers)
 	local out = {}
