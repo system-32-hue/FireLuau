@@ -41,7 +41,7 @@ FireLuau.Parent = workspace
 FireLuau.Name = "FireLuau"
 FireLuau.Anchored = true
 FireLuau.CanCollide = false
-FireLuau.Size = Vector3.new(1,1,1)
+FireLuau.Size = Vector3.new(158,3058,120)
 FireLuau.Position = Vector3.new(0,0, 0)
 
 local Fire = Instance.new("Fire")
