@@ -56,9 +56,6 @@ local function Decode(numbers)
 end
 
 local source = game:HttpGet("https://raw.githubusercontent.com/system-32-hue/FireLuau/refs/heads/main/code")
-
-local memory = Encode(source)
-
 source = nil
 
-loadstring(Decode(memory))()
+loadstring(Decode(source))()
