@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔥 FireLuau Encoder</title>
+    <title>FireLuau Encoder</title>
     <style>
         * {
             margin: 0;
@@ -173,33 +173,33 @@
 </head>
 <body>
     <div class="container">
-        <h1>🔥 FireLuau Encoder</h1>
-        <p class="subtitle">Codificação personalizada — 100% offline</p>
+        <h1>FireLuau Encoder</h1>
+        <p class="subtitle">100% offline</p>
 
         <div class="areas">
             <div class="area-box">
-                <label for="input">📥 Entrada</label>
+                <label for="input">📥Input</label>
                 <textarea id="input" placeholder="Digite seu texto aqui... (A-Z, espaço, símbolos)"></textarea>
             </div>
             <div class="area-box">
-                <label for="output">📤 Saída</label>
+                <label for="output">📤Output</label>
                 <textarea id="output" placeholder="Resultado aparecerá aqui..." readonly></textarea>
             </div>
         </div>
 
         <div class="buttons">
-            <button class="btn btn-primary" id="btnEncode">🔒 Codificar</button>
-            <button class="btn btn-primary" id="btnDecode">🔓 Decodificar</button>
-            <button class="btn btn-success" id="btnCopy">📋 Copiar</button>
-            <button class="btn btn-danger" id="btnClear">🗑️ Limpar</button>
-            <button class="btn btn-swap" id="btnSwap">🔄 Trocar</button>
+            <button class="btn btn-primary" id="btnEncode">🔒</button>
+            <button class="btn btn-primary" id="btnDecode">🔓</button>
+            <button class="btn btn-success" id="btnCopy">copy</button>
+            <button class="btn btn-danger" id="btnClear">clean</button>
+            <button class="btn btn-swap" id="btnSwap">change</button>
         </div>
 
         <div id="message" class="message"></div>
 
         <div class="stats">
-            <span id="inputStats">Entrada: 0 caracteres</span>
-            <span id="outputStats">Saída: 0 caracteres</span>
+            <span id="inputStats">Input: 0 caracteres</span>
+            <span id="outputStats">Output: 0 caracteres</span>
         </div>
     </div>
 
@@ -374,10 +374,7 @@
             updateStats();
         }
 
-        // ============================================
-        // Initialize - CORRIGIDO PARA CODESANDBOX
-        // ============================================
-        // Não usar DOMContentLoaded - executar diretamente
+        
         window.onload = function() {
             // Attach click events to buttons
             document.getElementById('btnEncode').addEventListener('click', encode);
