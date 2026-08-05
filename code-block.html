@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔥 FireLuau Encoder</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0d0d0d 0%, #1a1a2e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #e0e0e0;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            background: rgba(30, 30, 30, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #ff6b6b, #ffa500, #ff6b6b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .areas {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .area-box {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .area-box label {
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #ffa500;
+            font-size: 0.95rem;
+        }
+
+        textarea {
+            width: 100%;
+            height: 250px;
+            background: #1e1e1e;
+            border: 2px solid #333;
+            border-radius: 12px;
+            color: #fff;
+            padding: 15px;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #ffa500;
+        }
+
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #fff;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #ff6b6b, #ffa500);
+            color: #000;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-swap {
+            background: #17a2b8;
+        }
+
+        .message {
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .message.error {
+            background: rgba(220, 53, 69, 0.2);
+            color: #ff6b6b;
+            border: 1px solid rgba(220, 53, 69, 0.5);
+            display: block;
+        }
+
+        .message.success {
+            background: rgba(40, 167, 69, 0.2);
+            color: #28a745;
+            border: 1px solid rgba(40, 167, 69, 0.5);
+            display: block;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            color: #888;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            .areas {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔥 FireLuau Encoder</h1>
+        <p class="subtitle">Codificação personalizada — 100% offline</p>
+
+        <div class="areas">
+            <div class="area-box">
+                <label for="input">📥 Entrada</label>
+                <textarea id="input" placeholder="Digite seu texto aqui... (A-Z, espaço, símbolos)"></textarea>
+            </div>
+            <div class="area-box">
+                <label for="output">📤 Saída</label>
+                <textarea id="output" placeholder="Resultado aparecerá aqui..." readonly></textarea>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button class="btn btn-primary" id="btnEncode">🔒 Codificar</button>
+            <button class="btn btn-primary" id="btnDecode">🔓 Decodificar</button>
+            <button class="btn btn-success" id="btnCopy">📋 Copiar</button>
+            <button class="btn btn-danger" id="btnClear">🗑️ Limpar</button>
+            <button class="btn btn-swap" id="btnSwap">🔄 Trocar</button>
+        </div>
+
+        <div id="message" class="message"></div>
+
+        <div class="stats">
+            <span id="inputStats">Entrada: 0 caracteres</span>
+            <span id="outputStats">Saída: 0 caracteres</span>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // FireLuau Encoding Table
+        // ============================================
+        const ENCODE_MAP = {
+            ' ': 0,
+            'A': 1, 'B': 2, 'C': 3, 'D': 4, 'E': 5, 'F': 6, 'G': 7,
+            'H': 8, 'I': 9, 'J': 10, 'K': 11, 'L': 12, 'M': 13, 'N': 14,
+            'O': 15, 'P': 16, 'Q': 17, 'R': 18, 'S': 19, 'T': 20, 'U': 21,
+            'V': 22, 'W': 23, 'X': 24, 'Y': 25, 'Z': 26,
+            '(': 27, ')': 28, '-': 29, '+': 30, '=': 31,
+            "'": 32, ';': 33, ':': 34, '/': 35, '?': 36,
+            '\\': 37, '|': 38
+        };
+
+        // Reverse map for decoding
+        const DECODE_MAP = {};
+        for (const [char, num] of Object.entries(ENCODE_MAP)) {
+            DECODE_MAP[num] = char;
+        }
+
+        // ============================================
+        // Utility Functions
+        // ============================================
+        function showMessage(text, type) {
+            const msg = document.getElementById('message');
+            msg.textContent = text;
+            msg.className = 'message ' + type;
+            setTimeout(() => {
+                msg.className = 'message';
+            }, 3000);
+        }
+
+        function updateStats() {
+            const input = document.getElementById('input').value;
+            const output = document.getElementById('output').value;
+            document.getElementById('inputStats').textContent = 'Entrada: ' + input.length + ' caracteres';
+            document.getElementById('outputStats').textContent = 'Saída: ' + output.length + ' caracteres';
+        }
+
+        // ============================================
+        // Encoding Logic
+        // ============================================
+        function encodeText(text) {
+            const upperText = text.toUpperCase();
+            const result = [];
+            
+            for (let i = 0; i < upperText.length; i++) {
+                const char = upperText[i];
+                const code = ENCODE_MAP[char];
+                
+                if (code === undefined) {
+                    throw new Error('Caractere inválido: "' + char + '". Use apenas A-Z, espaço e símbolos permitidos.');
+                }
+                
+                result.push(code);
+            }
+            
+            return result.join(',');
+        }
+
+        // ============================================
+        // Decoding Logic
+        // ============================================
+        function decodeText(text) {
+            const cleaned = text.replace(/\s+/g, '');
+            if (cleaned.length === 0) return '';
+            
+            const parts = cleaned.split(',');
+            const result = [];
+            
+            for (const part of parts) {
+                if (part === '') continue;
+                
+                const num = Number(part);
+                if (isNaN(num) || !Number.isInteger(num)) {
+                    throw new Error('Número inválido: "' + part + '". Use apenas números inteiros separados por vírgulas.');
+                }
+                
+                const char = DECODE_MAP[num];
+                if (char === undefined) {
+                    throw new Error('Número fora do intervalo (0-38): ' + num);
+                }
+                
+                result.push(char);
+            }
+            
+            return result.join('');
+        }
+
+        // ============================================
+        // UI Actions
+        // ============================================
+        function encode() {
+            const input = document.getElementById('input').value;
+            const output = document.getElementById('output');
+            
+            try {
+                if (input.trim() === '') {
+                    output.value = '';
+                    showMessage('⚠️ Entrada vazia. Digite algo para codificar.', 'error');
+                    return;
+                }
+                
+                const encoded = encodeText(input);
+                output.value = encoded;
+                showMessage('✅ Texto codificado com sucesso!', 'success');
+            } catch (error) {
+                output.value = '';
+                showMessage('❌ ' + error.message, 'error');
+            }
+            updateStats();
+        }
+
+        function decode() {
+            const input = document.getElementById('input').value;
+            const output = document.getElementById('output');
+            
+            try {
+                if (input.trim() === '') {
+                    output.value = '';
+                    showMessage('⚠️ Entrada vazia. Digite números separados por vírgulas.', 'error');
+                    return;
+                }
+                
+                const decoded = decodeText(input);
+                output.value = decoded;
+                showMessage('✅ Texto decodificado com sucesso!', 'success');
+            } catch (error) {
+                output.value = '';
+                showMessage('❌ ' + error.message, 'error');
+            }
+            updateStats();
+        }
+
+        function copyResult() {
+            const output = document.getElementById('output');
+            if (output.value === '') {
+                showMessage('⚠️ Nada para copiar. Gere um resultado primeiro.', 'error');
+                return;
+            }
+            
+            navigator.clipboard.writeText(output.value).then(() => {
+                showMessage('📋 Resultado copiado!', 'success');
+            }).catch(() => {
+                output.select();
+                document.execCommand('copy');
+                showMessage('📋 Resultado copiado!', 'success');
+            });
+        }
+
+        function clearAll() {
+            document.getElementById('input').value = '';
+            document.getElementById('output').value = '';
+            document.getElementById('message').className = 'message';
+            showMessage('🗑️ Campos limpos.', 'success');
+            updateStats();
+        }
+
+        function swapAreas() {
+            const input = document.getElementById('input');
+            const output = document.getElementById('output');
+            
+            const temp = input.value;
+            input.value = output.value;
+            output.value = temp;
+            
+            showMessage('🔄 Áreas trocadas!', 'success');
+            updateStats();
+        }
+
+        // ============================================
+        // Initialize - CORRIGIDO PARA CODESANDBOX
+        // ============================================
+        // Não usar DOMContentLoaded - executar diretamente
+        window.onload = function() {
+            // Attach click events to buttons
+            document.getElementById('btnEncode').addEventListener('click', encode);
+            document.getElementById('btnDecode').addEventListener('click', decode);
+            document.getElementById('btnCopy').addEventListener('click', copyResult);
+            document.getElementById('btnClear').addEventListener('click', clearAll);
+            document.getElementById('btnSwap').addEventListener('click', swapAreas);
+
+            // Live Update (Instant while typing)
+            document.getElementById('input').addEventListener('input', function() {
+                const inputValue = this.value;
+                const output = document.getElementById('output');
+                
+                // Auto-detect: if input looks like numbers with commas, decode; otherwise encode
+                if (/^[\d,\s]+$/.test(inputValue.trim())) {
+                    // Looks like encoded format - try decode
+                    try {
+                        output.value = decodeText(inputValue);
+                    } catch (e) {
+                        output.value = '';
+                    }
+                } else {
+                    // Looks like plain text - try encode
+                    try {
+                        output.value = encodeText(inputValue);
+                    } catch (e) {
+                        output.value = '';
+                    }
+                }
+                
+                updateStats();
+            });
+
+            // Initialize stats
+            updateStats();
+        };
+
+        // Fallback: se window.onload não funcionar, executar imediatamente
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            setTimeout(function() {
+                document.getElementById('btnEncode').addEventListener('click', encode);
+                document.getElementById('btnDecode').addEventListener('click', decode);
+                document.getElementById('btnCopy').addEventListener('click', copyResult);
+                document.getElementById('btnClear').addEventListener('click', clearAll);
+                document.getElementById('btnSwap').addEventListener('click', swapAreas);
+
+                document.getElementById('input').addEventListener('input', function() {
+                    const inputValue = this.value;
+                    const output = document.getElementById('output');
+                    
+                    if (/^[\d,\s]+$/.test(inputValue.trim())) {
+                        try {
+                            output.value = decodeText(inputValue);
+                        } catch (e) {
+                            output.value = '';
+                        }
+                    } else {
+                        try {
+                            output.value = encodeText(inputValue);
+                        } catch (e) {
+                            output.value = '';
+                        }
+                    }
+                    
+                    updateStats();
+                });
+
+                updateStats();
+            }, 100);
+        }
+    </script>
+</body>
+</html>
