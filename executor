@@ -55,7 +55,7 @@ local function Decode(numbers)
 	return table.concat(out)
 end
 
-local source = game:HttpGet("https://raw.githubusercontent.com/system-32-hue/FireLuau/refs/heads/main/code")
+local source = data
 source = nil
 
 loadstring(Decode(source))()
